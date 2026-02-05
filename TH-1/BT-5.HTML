@@ -1,202 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Employee Form</title>
+<title>HR Management</title>
 </head>
 
 <body>
 
+<div class="header">
+<b>HR Management</b>
+
+<div class="nav">
+<span>Home</span>
+<span>Contact</span>
+</div>
+
+<div class="search">
+<input placeholder="Search...">
+<button>Search</button>
+</div>
+</div>
+
 <div class="container">
 
-<h3>Basic Info</h3>
-
-<div class="row">
-<label>Employee ID</label>
-<input value="9">
+<div class="top">
+<h3>Employee</h3>
+<button class="add">+ Add</button>
 </div>
 
-<div class="row">
-<label>Last Name</label>
-<input value="Dodsworth">
+<table>
+<tr>
+<th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Position</th><th>Action</th>
+</tr>
+
+<tr>
+<td>1</td><td>Fatima Beatriz</td><td>fatima@gmail.com</td><td>0985674321</td><td>Staff</td>
+<td><button class="edit">Edit</button> <button class="delete">Delete</button></td>
+</tr>
+
+<tr>
+<td>2</td><td>Gabriel Hanna</td><td>gabriel@gmail.com</td><td>0353674231</td><td>Staff</td>
+<td><button class="edit">Edit</button> <button class="delete">Delete</button></td>
+</tr>
+
+</table>
+
 </div>
 
-<div class="row">
-<label>First Name</label>
-<input value="Anne">
-</div>
+<div class="modal">
 
-<div class="row radio-group">
-<label>Gender</label>
-<div>
-<input type="radio" name="g"> Male <br>
-<input type="radio" name="g" checked> Female <br>
-<input type="radio" name="g"> XXX <br>
-<input type="radio" name="g"> ZZZ
-</div>
-</div>
+<div class="modal-header">New Employee</div>
 
-<div class="row">
-<label>Title</label>
-<input value="Sales Representative">
-</div>
+<div class="modal-body">
+<input placeholder="Name">
+<input placeholder="Email">
+<input placeholder="Phone">
 
-<div class="row">
-<label>Suffix</label>
-<input value="Ms.">
-</div>
-
-<div class="row">
-<label>BirthDate</label>
-<input type="datetime-local">
-</div>
-
-<div class="row">
-<label>HireDate</label>
-<input type="datetime-local">
-</div>
-
-<div class="row">
-<label>Reports To</label>
 <select>
-<option>Buchanan</option>
+<option>Select Position</option>
+<option>Staff</option>
+<option>Manager</option>
+<option>CEO</option>
 </select>
+
+<label><input type="radio"> Male</label>
+<label><input type="radio"> Female</label>
+
 </div>
 
-<h3>Contact Info</h3>
-
-<div class="row">
-<label>Email</label>
-<input value="name@example.com">
-</div>
-
-<div class="row">
-<label>Address</label>
-<input value="7 Houndstooth Rd.">
-</div>
-
-<div class="row">
-<label>City</label>
-<input value="London">
-</div>
-
-<div class="row">
-<label>Postal Code</label>
-<input value="WG2 7LT">
-</div>
-
-<div class="row">
-<label>Country</label>
-<select>
-<option>Russian Federation</option>
-<option>Vietnam</option>
-</select>
-</div>
-
-<div class="row">
-<label> US Home Phone</label>
-<input value="(234)234-2342">
-</div>
-
-<div class="row">
-<label>Photo</label>
-<input value="pic.png">
-</div>
-
-<h3>Optional Info</h3>
-
-<div class="row">
-<label>Notes</label>
-<textarea>
-Anne has a BA degree in English from St. Lawrence College.
-She is fluent in French and German.
-</textarea>
-</div>
-
-<div class="row check-group">
-<label>Preferred Shift</label>
-<div>
-<input type="checkbox"> Regular
-<input type="checkbox" checked> Gravy Yard
-</div>
-</div>
-
-<div class="row">
-<label>Active?</label>
-<input type="checkbox" checked>
-</div>
-
-<div class="row captcha">
-<label>Are you human?</label>
-<input placeholder="TIDAWO">
-<button type="button">Click to change</button>
-</div>
-
-<div class="buttons">
-<button>Submit</button>
-<button>Cancel</button>
+<div class="modal-footer">
+<button class="save">Save</button>
+<button class="cancel">Cancel</button>
 </div>
 
 </div>
+
 </body>
-
-
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
+body{
+  margin:0;
+  font-family:Arial;
+  background:#f4f6f9;
 }
 
-.container {
-  width: 600px;
-  margin: 30px auto;
-  background: #fff;
-  border: 1px solid #ccc;
-  padding: 15px;
+.header{
+  background:#222;
+  color:white;
+  padding:10px 20px;
+  display:flex;
+  align-items:center;
 }
 
-h3 {
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 5px;
+.nav span{
+  margin-left:10px;
+  color:#ccc;
 }
 
-.row {
-  display: flex;
-  margin-bottom: 8px;
-  align-items: center;
+.search input{
+  margin-left: 500px;
 }
 
-.row label {
-  width: 150px;
-  font-size: 14px;
+.container{
+  padding:20px;
 }
 
-.row input, .row select, textarea {
-  flex: 1;
-  padding: 5px;
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-textarea {
-  height: 100px;
+.add{
+  background:#0d6efd;
+  color:white;
+  border:none;
+  padding:6px 12px;
+  border-radius:4px;
+}
+table{
+  width:100%;
+  background:white;
+  border-collapse:collapse;
 }
 
-.radio-group input,
-.check-group input {
-  margin-right: 5px;
+th,td{
+  padding:10px;
+  border-bottom:1px solid #ddd;
+  text-align:left;
 }
 
-.buttons {
-  text-align: right;
-  margin-top: 15px;
+.edit{
+  background:#ffc107;
+  border:none;
+  padding:4px 8px;
 }
 
-button {
-  padding: 6px 15px;
+.delete{
+  background:#dc3545;
+  color:white;
+  border:none;
+  padding:4px 8px;
 }
 
-.captcha {
-  display: flex;
-  gap: 10px;
+.modal{
+  width:400px;
+  margin:40px auto;
+  background:white;
+  border:1px solid #ddd;
+}
+
+.modal-header{
+  background:#0d6efd;
+  color:white;
+  padding:8px;
+}
+
+.modal-body{
+  padding:10px;
+}
+
+.modal-body input,select{
+  width:100%;
+  padding:6px;
+  margin:6px 0;
+}
+
+.modal-footer{
+  padding:10px;
+  text-align:right;
+}
+
+.save{
+  background:green;
+  color:white;
+  border:none;
+  padding:5px 10px;
+}
+
+.cancel{
+  background:gray;
+  color:white;
+  border:none;
+  padding:5px 12px;
 }
 </style>
 </html>
