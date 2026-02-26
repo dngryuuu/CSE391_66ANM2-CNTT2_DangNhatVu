@@ -1,0 +1,62 @@
+body {
+    font-family: "Quicksand", sans-serif;
+}
+
+#concept {
+  background-color: #f2f2f2;
+  padding-bottom: 80px;
+}
+
+.container {
+  max-width: 1000px;
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.container h1 {
+  padding-top: 50px;
+  margin: 50px 0;
+  font-weight: 400;
+}
+
+.content {
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.card {
+  background: white;
+  padding: 40px;
+  width: 250px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+  margin-bottom: 20px;
+}
+
+.author {
+  margin-top: 30px;
+}
+
+.author span {
+  color: #3498db;
+  font-size: 14px;
+}
+
+.text {
+  flex: 1;
+  line-height: 1.7;
+}
+
+.text p {
+  margin-bottom: 20px;
+}
+
+#concept {
+  border-left: 3px solid #9ad0f5;
+  border-right: 3px solid #9ad0f5;
+}
