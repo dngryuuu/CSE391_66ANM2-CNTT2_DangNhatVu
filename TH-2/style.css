@@ -1,0 +1,184 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* ================= HEADER ================= */
+#main-header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+/* ================= NAV (DÙNG FLEXBOX) ================= */
+nav {
+    display: flex;
+    justify-content: center;   /* căn giữa */
+    align-items: center;
+    gap: 20px;                 /* thay cho margin */
+    background: #f8f9fa;
+    padding: 15px;
+}
+
+.nav-link {
+    color: #333;
+    text-decoration: none;
+    padding: 10px 15px;
+}
+
+/* bỏ inline-block cũ */
+nav a {
+    margin: 0;
+}
+
+a:hover {
+    color: #ff6600;
+    background-color: #eee;
+}
+
+h1, h2, h3 {
+    font-family: 'Georgia', serif;
+}
+
+/* ================= POSTS (DÙNG FLEXBOX) ================= */
+.posts {
+    display: flex;
+    flex-wrap: wrap;          /* cho phép xuống hàng */
+    gap: 20px;
+    justify-content: center;  /* căn giữa */
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+/* ================= CARD FLEX ITEM ================= */
+.card {
+    flex: 1 1 300px;          /* tối thiểu 300px */
+    border: 1px solid #ddd;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+}
+
+/* ================= BUTTON ================= */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.btn:hover {
+    background: #0056b3;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .posts {
+        flex-direction: column;
+    }
+
+    .card {
+        flex: 1 1 100%;
+    }
+}
+
+/* ================= GALLERY GRID ================= */
+/* ================= DESKTOP (mặc định) ================= */
+/* 3 cột - 2 hàng */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+/* ================= ITEM ================= */
+.item {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 150px;
+    font-size: 2rem;
+    border-radius: 8px;
+}
+
+/* ================= TABLET ================= */
+/* 2 cột - 3 hàng */
+@media (max-width: 992px) {
+    .gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ================= MOBILE ================= */
+/* 1 cột - 6 hàng */
+@media (max-width: 576px) {
+    .gallery {
+        grid-template-columns: 1fr;
+    }
+}
+/* Header sticky */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    background: #333;   /* nên có nền để không bị trong suốt */
+    color: white;
+    padding: 20px;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Nút Scroll to Top */
+.scroll-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+
+    width: 50px;
+    height: 50px;
+    background: #007bff;
+    color: white;
+
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-decoration: none;
+    font-size: 24px;
+
+    transition: all 0.3s ease;
+}
+
+.scroll-top:hover {
+    background: #0056b3;
+    transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+}
