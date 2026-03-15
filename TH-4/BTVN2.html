@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Multi-step Form Đăng Ký</title>
+</head>
+<body>
+
+<div class="container" id="main-container">
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+        <div class="progress-step active">1</div>
+        <div class="progress-step">2</div>
+        <div class="progress-step">3</div>
+    </div>
+
+    <form id="multiStepForm" novalidate>
+        <div class="form-step active" id="step1">
+            <h2>Thông tin cá nhân</h2>
+            <div class="form-group">
+                <label for="fullname">Họ và tên</label>
+                <input type="text" id="fullname" placeholder="Nhập họ và tên">
+                <span class="error" id="fullname-error"></span>
+            </div>
+            <div class="form-group">
+                <label for="dob">Ngày sinh</label>
+                <input type="date" id="dob">
+                <span class="error" id="dob-error"></span>
+            </div>
+            <div class="form-group">
+                <label>Giới tính</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="gender" value="Nam"> Nam</label>
+                    <label><input type="radio" name="gender" value="Nữ"> Nữ</label>
+                    <label><input type="radio" name="gender" value="Khác"> Khác</label>
+                </div>
+                <span class="error" id="gender-error"></span>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-next" id="btnNext1">Tiếp theo</button>
+            </div>
+        </div>
+
+        <div class="form-step" id="step2">
+            <h2>Thông tin tài khoản</h2>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" id="email" placeholder="name@domain.com">
+                <span class="error" id="email-error"></span>
+            </div>
+            <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <input type="password" id="password" placeholder="Nhập mật khẩu">
+                <span class="error" id="password-error"></span>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Xác nhận mật khẩu</label>
+                <input type="password" id="confirmPassword" placeholder="Nhập lại mật khẩu">
+                <span class="error" id="confirmPassword-error"></span>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-prev" id="btnPrev2">Quay lại</button>
+                <button type="button" class="btn btn-next" id="btnNext2">Tiếp theo</button>
+            </div>
+        </div>
+
+        <div class="form-step" id="step3">
+            <h2>Xác nhận thông tin</h2>
+            <div class="summary-box">
+                <p><strong>Họ và tên:</strong> <span id="sum-fullname"></span></p>
+                <p><strong>Ngày sinh:</strong> <span id="sum-dob"></span></p>
+                <p><strong>Giới tính:</strong> <span id="sum-gender"></span></p>
+                <p><strong>Email:</strong> <span id="sum-email"></span></p>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-prev" id="btnPrev3">Quay lại</button>
+                <button type="submit" class="btn btn-submit">Hoàn tất đăng ký</button>
+            </div>
+        </div>
+    </form>
+    
+    <div id="success-message">
+        <h2>🎉 Đăng ký thành công!</h2>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 3;
+
+    const formSteps = document.querySelectorAll('.form-step');
+    const progressSteps = document.querySelectorAll('.progress-step');
+    const progressBar = document.getElementById('progress-bar');
+
+    const fullname = document.getElementById('fullname');
+    const dob = document.getElementById('dob');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    
+    const btnNext1 = document.getElementById('btnNext1');
+    const btnNext2 = document.getElementById('btnNext2');
+    const btnPrev2 = document.getElementById('btnPrev2');
+    const btnPrev3 = document.getElementById('btnPrev3');
+
+    const updateProgress = () => {
+        progressSteps.forEach((step, idx) => {
+            if (idx < currentStep) {
+                step.classList.add('active');
+                if (idx < currentStep - 1) {
+                    step.classList.add('completed');
+                } else {
+                    step.classList.remove('completed');
+                }
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
+        const activeSteps = document.querySelectorAll('.progress-step.active');
+        progressBar.style.width = ((activeSteps.length - 1) / (progressSteps.length - 1)) * 100 + '%';
+    };
+
+    const showStep = (step) => {
+        formSteps.forEach((fs, index) => {
+            if (index === step - 1) {
+                fs.classList.add('active');
+            } else {
+                fs.classList.remove('active');
+            }
+        });
+        updateProgress();
+    };
+
+    const setError = (id, message) => {
+        const errorEl = document.getElementById(id + '-error');
+        errorEl.textContent = message;
+        const inputEl = document.getElementById(id);
+        if(inputEl) inputEl.closest('.form-group').classList.add('error');
+    };
+
+    const clearError = (id) => {
+        const errorEl = document.getElementById(id + '-error');
+        errorEl.textContent = '';
+        const inputEl = document.getElementById(id);
+        if(inputEl) inputEl.closest('.form-group').classList.remove('error');
+    };
+
+    const validateStep1 = () => {
+        let isValid = true;
+        
+        clearError('fullname');
+        if (!fullname.value.trim() || fullname.value.trim().length < 3 || !/^[a-zA-ZÀ-ỹ\s]+$/.test(fullname.value.trim())) {
+            setError('fullname', 'Họ tên không hợp lệ (≥ 3 ký tự, chỉ chứa chữ).');
+            isValid = false;
+        }
+
+        clearError('dob');
+        if (!dob.value) {
+            setError('dob', 'Vui lòng chọn ngày sinh.');
+            isValid = false;
+        }
+
+        clearError('gender');
+        const genderChecked = document.querySelector('input[name="gender"]:checked');
+        if (!genderChecked) {
+            setError('gender', 'Vui lòng chọn giới tính.');
+            isValid = false;
+        }
+
+        return isValid;
+    };
+
+    const validateStep2 = () => {
+        let isValid = true;
+
+        clearError('email');
+        if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+            setError('email', 'Email không hợp lệ.');
+            isValid = false;
+        }
+
+        clearError('password');
+        if (!password.value || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password.value)) {
+            setError('password', 'Mật khẩu ≥ 8 ký tự, có chữ hoa, thường và số.');
+            isValid = false;
+        }
+
+        clearError('confirmPassword');
+        if (!confirmPassword.value || confirmPassword.value !== password.value) {
+            setError('confirmPassword', 'Mật khẩu xác nhận không khớp.');
+            isValid = false;
+        }
+
+        return isValid;
+    };
+
+    const populateSummary = () => {
+        document.getElementById('sum-fullname').textContent = fullname.value.trim();
+        
+        const d = new Date(dob.value);
+        document.getElementById('sum-dob').textContent = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth()+1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+        
+        document.getElementById('sum-gender').textContent = document.querySelector('input[name="gender"]:checked').value;
+        document.getElementById('sum-email').textContent = email.value.trim();
+    };
+
+    btnNext1.addEventListener('click', () => { if (validateStep1()) { currentStep++; showStep(currentStep); } });
+    btnNext2.addEventListener('click', () => { if (validateStep2()) { currentStep++; populateSummary(); showStep(currentStep); } });
+    
+    btnPrev2.addEventListener('click', () => { currentStep--; showStep(currentStep); });
+    btnPrev3.addEventListener('click', () => { currentStep--; showStep(currentStep); });
+
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', () => {
+            clearError(input.id || input.name);
+        });
+    });
+
+    document.getElementById('multiStepForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        if (currentStep === 1) {
+            if (validateStep1()) { currentStep++; showStep(currentStep); }
+        } else if (currentStep === 2) {
+            if (validateStep2()) { currentStep++; populateSummary(); showStep(currentStep); }
+        } else if (currentStep === 3) {
+            document.querySelector('.progress-container').style.display = 'none';
+            document.getElementById('multiStepForm').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+    .container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        width: 450px;
+        position: relative;
+    }
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    .progress-container {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin-bottom: 30px;
+    }
+    .progress-container::before {
+        content: '';
+        background-color: #e0e0e0;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        height: 4px;
+        width: 100%;
+        z-index: 1;
+    }
+    .progress-bar {
+        background-color: #3498db;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        height: 4px;
+        width: 0%;
+        z-index: 1;
+        transition: width 0.4s ease;
+    }
+    .progress-step {
+        background-color: #fff;
+        color: #999;
+        border: 3px solid #e0e0e0;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
+        font-weight: bold;
+        transition: 0.4s ease;
+    }
+    .progress-step.active {
+        border-color: #3498db;
+        color: #3498db;
+    }
+    .progress-step.completed {
+        background-color: #3498db;
+        border-color: #3498db;
+        color: #fff;
+    }
+
+    .form-step {
+        display: none;
+    }
+    .form-step.active {
+        display: block;
+        animation: fadeIn 0.5s;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .form-group input:focus {
+        border-color: #3498db;
+        outline: none;
+    }
+    
+    .form-group .error {
+        color: #e74c3c;
+        font-size: 0.85em;
+        display: block;
+        margin-top: 5px;
+        min-height: 1em;
+    }
+    .form-group.error input {
+        border-color: #e74c3c;
+    }
+    .form-group.success input {
+        border-color: #2ecc71;
+    }
+
+    .radio-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 5px;
+    }
+    .radio-group label {
+        font-weight: normal;
+    }
+
+    .btn-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        transition: 0.3s;
+    }
+    .btn-prev {
+        background-color: #95a5a6;
+    }
+    .btn-prev:hover {
+        background-color: #7f8c8d;
+    }
+    .btn-next, .btn-submit {
+        background-color: #3498db;
+        margin-left: auto;
+    }
+    .btn-next:hover, .btn-submit:hover {
+        background-color: #2980b9;
+    }
+    .btn:disabled {
+        background-color: #bdc3c7;
+        cursor: not-allowed;
+    }
+
+    .summary-box {
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 4px;
+        border: 1px solid #eee;
+        margin-bottom: 20px;
+    }
+    .summary-box p {
+        margin: 8px 0;
+        color: #333;
+    }
+    .summary-box strong {
+        display: inline-block;
+        width: 150px;
+    }
+
+    #success-message {
+        text-align: center;
+        display: none;
+        padding: 40px 0;
+    }
+    #success-message h2 {
+        color: #2ecc71;
+    }
+</style>

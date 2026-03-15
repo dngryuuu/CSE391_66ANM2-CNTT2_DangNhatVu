@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Quản lý điểm sinh viên</title>
+</head>
+
+<body>
+
+<h2>Quản lý điểm sinh viên</h2>
+
+<div class="input-group">
+    <input type="text" id="txtName" placeholder="Nhập họ tên sinh viên">
+    <input type="number" id="txtScore" placeholder="Điểm (0-10)" min="0" max="10" step="0.1" style="width: 100px;">
+    <button onclick="addStudent()">Thêm</button>
+</div>
+
+<table>
+        <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Họ tên</th>
+                    <th>Điểm</th>
+                    <th>Xếp loại</th>
+                    <th>Thao tác</th>
+                </tr>
+        </thead>
+        <tbody id="studentTable"></tbody>
+</table>
+
+<p id="stats"></p>
+
+<script>
+
+let students = [];
+
+function getRank(score){
+    if(score >= 8.5) return "Giỏi";
+    if(score >= 7) return "Khá";
+    if(score >= 5) return "Trung bình";
+    return "Yếu";
+}
+
+function addStudent(){
+    let name = document.getElementById("txtName").value.trim();
+    let score = parseFloat(document.getElementById("txtScore").value);
+
+    if(name === ""){
+        alert("Họ tên không được trống");
+        return;
+    }
+
+    if(isNaN(score) || score < 0 || score > 10){
+        alert("Điểm phải từ 0 đến 10");
+        return;
+    }
+
+    students.push({name, score});
+
+    renderTable();
+
+    document.getElementById("txtName").value = "";
+    document.getElementById("txtScore").value = "";
+    document.getElementById("txtName").focus();
+}
+
+function renderTable(){
+    let tbody = document.getElementById("studentTable");
+    tbody.innerHTML = "";
+
+    let total = 0;
+
+    students.forEach((s, index)=>{
+        total += s.score;
+
+        let tr = document.createElement("tr");
+
+        if(s.score < 5){
+            tr.classList.add("weak");
+        }
+
+        tr.innerHTML = `
+            <td>${index+1}</td>
+            <td>${s.name}</td>
+            <td>${s.score}</td>
+            <td>${getRank(s.score)}</td>
+            <td><button data-index="${index}" class="delete-btn">Xóa</button></td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+
+    let avg = students.length ? (total / students.length).toFixed(2) : 0;
+
+    document.getElementById("stats").innerText =
+        "Tổng sinh viên: " + students.length + " | Điểm trung bình: " + avg;
+}
+
+document.getElementById("studentTable").addEventListener("click", function(e){
+    if(e.target.classList.contains("delete-btn")){
+        let index = e.target.dataset.index;
+        students.splice(index,1);
+        renderTable();
+    }
+});
+
+document.getElementById("txtScore").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        addStudent();
+    }
+});
+
+</script>
+
+</body>
+</html>
+<style>
+body{
+    font-family: Arial;
+    padding: 20px;
+}
+
+.input-group{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td{
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+th{
+    background: #f2f2f2;
+}
+
+.weak{
+    background: yellow;
+}
+
+button{
+    padding: 5px 10px;
+}
+</style>

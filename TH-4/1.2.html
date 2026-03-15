@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Quản lý điểm sinh viên</title>
+</head>
+
+<body>
+
+<h2>Quản lý điểm sinh viên</h2>
+
+<div class="input-group">
+    <input type="text" id="txtName" placeholder="Nhập họ tên sinh viên">
+    <input type="number" id="txtScore" placeholder="Điểm (0-10)" min="0" max="10" step="0.1" style="width: 100px;">
+    <button onclick="addStudent()">Thêm</button>
+
+    <select id="rankFilter">
+        <option value="all">Tất cả</option>
+        <option value="Giỏi">Giỏi</option>
+        <option value="Khá">Khá</option>
+        <option value="Trung bình">Trung bình</option>
+        <option value="Yếu">Yếu</option>
+    </select>
+
+    <input type="text" id="search" placeholder="Tìm kiếm sinh viên">
+</div>
+
+<table>
+<thead>
+<tr>
+<th>STT</th>
+<th>Họ tên</th>
+<th id="scoreHeader">Điểm</th>
+<th>Xếp loại</th>
+<th>Thao tác</th>
+</tr>
+</thead>
+<tbody id="studentTable"></tbody>
+</table>
+
+<p id="stats"></p>
+
+<script>
+
+let students = [];
+let filteredStudents = [];
+
+let sortAsc = true;
+
+const searchInput = document.getElementById("search");
+const rankFilter = document.getElementById("rankFilter");
+const scoreHeader = document.getElementById("scoreHeader");
+
+searchInput.addEventListener("input", applyFilters);
+rankFilter.addEventListener("change", applyFilters);
+
+scoreHeader.addEventListener("click", function() {
+    sortAsc = !sortAsc;
+    applyFilters();
+});
+
+function getRank(score){
+    if(score >= 8.5) return "Giỏi";
+    if(score >= 7) return "Khá";
+    if(score >= 5) return "Trung bình";
+    return "Yếu";
+}
+
+function addStudent(){
+
+    let name = document.getElementById("txtName").value.trim();
+    let score = parseFloat(document.getElementById("txtScore").value);
+
+    if(name === ""){
+        alert("Họ tên không được trống");
+        return;
+    }
+
+    if(isNaN(score) || score < 0 || score > 10){
+        alert("Điểm phải từ 0 đến 10");
+        return;
+    }
+
+    students.push({name, score});
+
+    applyFilters();
+
+    document.getElementById("txtName").value = "";
+    document.getElementById("txtScore").value = "";
+    document.getElementById("txtName").focus();
+}
+
+function applyFilters(){
+
+    let keyword = searchInput.value.trim().toLowerCase();
+    let rank = rankFilter.value;
+
+    filteredStudents = students.filter(s => {
+
+        let matchName = s.name.toLowerCase().includes(keyword);
+
+        let studentRank = getRank(s.score);
+
+        let matchRank = rank === "all" || studentRank === rank;
+
+        return matchName && matchRank;
+    });
+
+    filteredStudents.sort((a,b) => 
+        sortAsc ? a.score - b.score : b.score - a.score
+    );
+
+    renderTable();
+}
+
+function renderTable(){
+
+    let tbody = document.getElementById("studentTable");
+    tbody.innerHTML = "";
+
+    if(filteredStudents.length === 0){
+        tbody.innerHTML = `<tr><td colspan="5">Không có kết quả</td></tr>`;
+        document.getElementById("stats").innerText = "";
+        return;
+    }
+
+    let total = 0;
+
+    filteredStudents.forEach((s, index)=>{
+        total += s.score;
+
+        let tr = document.createElement("tr");
+
+        if(s.score < 5){
+            tr.classList.add("weak");
+        }
+
+        let originalIndex = students.indexOf(s);
+
+        tr.innerHTML = `
+            <td>${index+1}</td>
+            <td>${s.name}</td>
+            <td>${s.score}</td>
+            <td>${getRank(s.score)}</td>
+            <td><button data-index="${originalIndex}" class="delete-btn">Xóa</button></td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+
+    let avg = filteredStudents.length ? (total / filteredStudents.length).toFixed(2) : 0;
+
+    document.getElementById("stats").innerText =
+        "Tổng sinh viên: " + filteredStudents.length + " | Điểm trung bình: " + avg;
+
+    scoreHeader.innerText = "Điểm " + (sortAsc ? "▲" : "▼");
+}
+
+document.getElementById("studentTable").addEventListener("click", function(e){
+    if(e.target.classList.contains("delete-btn")){
+        let index = e.target.dataset.index;
+        students.splice(index, 1);
+        applyFilters();
+    }
+});
+
+document.getElementById("txtScore").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        addStudent();
+    }
+});
+
+applyFilters();
+
+</script>
+
+</body>
+</html>
+<style>
+body{
+    font-family: Arial;
+    padding: 20px;
+}
+
+.input-group{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td{
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+th{
+    background: #f2f2f2;
+    cursor: pointer;
+}
+
+.weak{
+    background: yellow;
+}
+
+button{
+    padding: 5px 10px;
+}
+</style>
